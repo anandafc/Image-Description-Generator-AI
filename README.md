@@ -82,6 +82,7 @@ Welcome to the **Image Analysis Project**, a web application that allows users t
 │   │   ├── analyze.html  # Analyze page template
 │   ├── static/           # Static files (CSS, JS, etc.)               
 
+```
 ## Technologies Used
 
 - **Backend**: FastAPI
