@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Analysis - Analyze</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #F1F5F9;
+            color: #0F172A;
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background-color: #1E293B;
+            padding: 15px 20px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            font-size: 24px;
+            font-weight: 700;
+            color: #FFFFFF;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-button {
+            padding: 8px 16px;
+            background-color: #0EA5E9;
+            color: #FFFFFF;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 700;
+            transition: background-color 0.3s;
+        }
+
+        .nav-button:hover {
+            background-color: #0284C7;
+        }
+
+        .main-content {
+            padding-top: 70px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #FFFFFF;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748B;
+            margin-bottom: 20px;
+        }
+
+        .upload-area {
+            border: 2px dashed #CBD5E1;
+            padding: 30px;
+            text-align: center;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .upload-area.dragover {
+            border-color: #0EA5E9;
+            background-color: #EFF6FF;
+        }
+
+        .upload-area input[type="file"] {
+            display: none;
+        }
+
+        .upload-label {
+            font-size: 16px;
+            color: #0EA5E9;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .upload-preview {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .upload-preview img {
+            max-width: 150px;
+            max-height: 150px;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+            display: none;
+        }
+
+        button {
+            width: 200px;
+            margin: 20px auto;
+            padding: 12px;
+            background-color: #0EA5E9;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 5px;
+            font-weight: 700;
+            display: block;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0284C7;
+        }
+
+        .progress-bar {
+            margin-top: 10px;
+            background-color: #E2E8F0;
+            border-radius: 5px;
+            height: 15px;
+            position: relative;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress-fill {
+            background: linear-gradient(to right, #0EA5E9, #38BDF8);
+            height: 100%;
+            width: 0;
+            transition: width 0.2s linear;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12px;
+            color: #FFFFFF;
+            font-weight: 700;
+        }
+
+        .result {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .uploaded-image {
+            flex: 1;
+            text-align: center;
+        }
+
+        .uploaded-image img {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+        }
+
+        .result-details {
+            flex: 1;
+            background-color: #F8FAFC;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .result-item {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .result-item strong {
+            font-weight: 700;
+        }
+
+        .color-swatch {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            margin-right: 5px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .color-text {
+            color: #64748B;
+            margin-right: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .nav-links {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .nav-button {
+                flex: 1;
+                text-align: center;
+            }
+
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .result {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">Image Analysis</a>
+            <div class="nav-links">
+                <a href="/" class="nav-button">Home</a>
+                <a href="/analyze" class="nav-button">Analyze</a>
+            </div>
+        </div>
+    </nav>
+    <main class="main-content">
+        <div class="container">
+            <h1>Analyze Your Images</h1>
+            <p class="subtitle">Upload an image to explore its colors, objects, and ambiance.</p>
+            <form id="upload-form" enctype="multipart/form-data">
+                <div class="upload-area">
+                    <input type="file" id="image-input" name="file" accept="image/*" required>
+                    <label for="image-input" class="upload-label">Drop an image here or click to upload</label>
+                </div>
+                <div class="upload-preview">
+                    <img id="upload-preview-img" src="" alt="Upload preview">
+                </div>
+                <button type="submit">Start Analysis</button>
+            </form>
+            <div id="progress-bar" class="progress-bar">
+                <div class="progress-fill"></div>
+                <span class="progress-text">Analyzing: 0%</span>
+            </div>
+            <div id="result" class="result" style="display: none;">
+                <div id="uploaded-image" class="uploaded-image">
+                    <img id="image-preview" src="" alt="Uploaded image">
+                </div>
+                <div id="result-details" class="result-details">
+                    <div id="result-text">Analyzing...</div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        const form = document.getElementById('upload-form');
+        const imageInput = document.getElementById('image-input');
+        const uploadPreviewImg = document.getElementById('upload-preview-img');
+        const imagePreview = document.getElementById('image-preview');
+        const uploadedImageDiv = document.getElementById('uploaded-image');
+        const resultText = document.getElementById('result-text');
+        const resultDetails = document.getElementById('result-details');
+        const progressBar = document.getElementById('progress-bar');
+        const progressFill = document.querySelector('.progress-fill');
+        const progressText = document.querySelector('.progress-text');
+        const resultSection = document.getElementById('result');
+
+        imageInput.addEventListener('change', () => {
+            const file = imageInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    uploadPreviewImg.src = reader.result;
+                    uploadPreviewImg.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        const uploadArea = document.querySelector('.upload-area');
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            imageInput.files = e.dataTransfer.files;
+            const file = imageInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    uploadPreviewImg.src = reader.result;
+                    uploadPreviewImg.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function startProgress() {
+            progressBar.style.display = 'block';
+            let progress = 0;
+            progressFill.style.width = '0%';
+            progressText.textContent = 'Analyzing: 0%';
+            const interval = setInterval(() => {
+                progress += 10;
+                if (progress > 100) progress = 100;
+                progressFill.style.width = `${progress}%`;
+                progressText.textContent = `Analyzing: ${progress}%`;
+                if (progress >= 100) clearInterval(interval);
+            }, 200);
+        }
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            resultText.innerHTML = 'Analyzing...';
+            resultSection.style.display = 'flex';
+            imagePreview.src = uploadPreviewImg.src;
+            startProgress();
+            const formData = new FormData(form);
+            try {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                progressBar.style.display = 'none';
+                if (result.error) {
+                    resultText.innerHTML = `Error: ${result.error}<br>Details: ${result.raw_response || 'None'}`;
+                } else {
+                    let colorsHtml = result.colors.length
+                        ? result.colors.map(color => {
+                            try {
+                                const div = document.createElement('div');
+                                div.style.backgroundColor = color;
+                                return `<span class="color-swatch" style="background-color: ${color};"></span>`;
+                            } catch {
+                                return `<span class="color-text">${color}</span>`;
+                            }
+                        }).join('')
+                        : 'None';
+                    resultText.innerHTML = `
+                        <div class="result-item"><strong>Description:</strong> ${result.description || 'None'}</div>
+                        <div class="result-item"><strong>Colors:</strong> ${colorsHtml}</div>
+                        <div class="result-item"><strong>Objects:</strong> ${result.objects.join(', ') || 'None'}</div>
+                        <div class="result-item"><strong>Ambiance:</strong> ${result.ambiance || 'None'}</div>
+                    `;
+                }
+            } catch (error) {
+                progressBar.style.display = 'none';
+                resultText.innerHTML = `Error: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
