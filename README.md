@@ -1,6 +1,6 @@
-# Image Analysis Project
+  # Image Description Generator
 
-Welcome to the **Image Analysis Project**, a web application that allows users to upload images and analyze them using AI-powered tools. The application provides insights such as dominant colors, detected objects, ambiance, and a brief description of the image.
+Welcome to the **Image Description Generator**, a web application that allows users to upload images and analyze them using AI-powered tools. The application provides insights such as dominant colors, detected objects, ambiance, and a brief description of the image.
 
 ## Features
 
